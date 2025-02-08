@@ -1,0 +1,51 @@
+Install apache2
+
+vboxuser@Ubuntu:~$ sudo apt update
+vboxuser@Ubuntu:~$ sudo apt install apache2 -y
+Enabling
+vboxuser@Ubuntu:~$ sudo systemctl start apache2
+vboxuser@Ubuntu:~$ sudo enable apache2
+vboxuser@Ubuntu:~$ sudo system status apache2
+vboxuser@Ubuntu:~$ sudo nano index.html
+vboxuser@Ubuntu:~$ sudo nano AboutUS.html
+vboxuser@Ubuntu:~$ sudo nano ABS.css
+vboxuser@Ubuntu:~$ sudo -R 755 /var/www/html
+vboxuser@Ubuntu:~$ sudo chown -R www-data:www-data /var/www/html
+vboxuser@Ubuntu:~$ sudo systemctl restart apache2
+vboxuser@Ubuntu:~$ sudo nano /etc/apache2/sites-available/AmericanBusNetwork.conf
+vboxuser@Ubuntu:~$ sudo systemctl reload apache2
+vboxuser@Ubuntu:~$ sudo nano /etc/hosts
+-Type 127.0.0.1 AmericanBusNetwork.local
+vboxuser@Ubuntu:~$ cd /var/www/html
+vboxuser@Ubuntu:~$: /var/www/html$ sudo mkdir images
+ vboxuser@Ubuntu:~$: sudo cp /home/vboxuser/Downloads/download1.jpeg /var/www/html/images (repeat for all images)
+vboxuser@Ubuntu:~$ sudo chmod 777 /var/www/html/images
+vboxuser@Ubuntu:~$ sudo chmod 755 /var/www/html/images
+vboxuser@Ubuntu:~$ sudo chown vboxuser:www-data /var/www/html/images
+vboxuser@Ubuntu:~$ sudo restart apache2
+vboxuser@Ubuntu:~$ sudo a2enmod ssl
+vboxuser@Ubuntu:~$ sudo systemctl restart apache2
+vboxuser@Ubuntu:~$sudo openssl req -x509 -nodes -days 654 -newkey rsa:2048 \
+> -keyout .etc/ssl/private/apache-selfsigned.crt
+> -out/ etc/ssl/certs/apache-selfsigned.crt
+(Will Ask For Information)
+vboxuser@Ubuntu:~$ sudo nano /etc/apache2/sites-available/default-ssl.conf
+ <VirtualHost *:443> 
+ServerAdmin webmaster@localhost 
+ServerName localhost
+ DocumentRoot /var/www/html 
+SSLEngine on 
+SSLCertificateFile /etc/ssl/certs/apache-selfsigned.crt 
+SSLCertificateKeyFile /etc/ssl/private/apache-selfsigned.key
+ <Directory /var/www/html>
+ AllowOverride All
+ </Directory>
+ ErrorLog ${APACHE_LOG_DIR}/error.log 
+CustomLog ${APACHE_LOG_DIR}/access.log combined
+ </VirtualHost>
+vboxuser@Ubuntu:~$ sudo systemctl reload apache2
+vboxuser@Ubuntu:~$ sudo a2ensite default-ssl
+Will show a warning due to self cert
+(To fix the warning)
+vboxuser@Ubuntu:~$ sudo cp server.crt
+/usr/local/share/ca-certificates/extra/sudo update-ca-certificate
