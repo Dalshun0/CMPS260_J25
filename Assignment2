@@ -1,0 +1,56 @@
+#                             Online Bash Shell.
+#                 Code, Compile, Run and Debug Bash script online.
+# Write your code in this editor and press "Run" button to execute it.
+
+
+#!/bin/bash
+
+# Define gas prices
+declare -A gas_prices
+
+gas_prices[Regular]=5.02
+gas_prices[Midgrade]=5.22
+gas_prices[Premium]=5.42
+gas_prices[Diesel]=6.03
+
+SALES_TAX=0.075  # 7.5% sales tax
+
+echo "--------------------------------------Welcome to Gas 4 Taxes--------------------------------------"
+echo "| Gas Type  | Price  |"
+echo "-------------------------------------------------------------------------------------------------------------"
+for gas in "${!gas_prices[@]}"; do
+    printf "| %-9s | \$%.2f |
+" "$gas" "${gas_prices[$gas]}"
+    echo "-------------------------------------------------------------------------------------------------------------"
+done
+
+# Get user input
+echo -n "Choose a gas type to fill up your car: "
+read gas_type
+
+gas_price=${gas_prices[$gas_type]}
+if [ -z "$gas_price" ]; then
+    echo "Invalid gas type selected! Exiting..."
+    exit 1
+fi
+
+echo -n "How many gallons: "
+read gallons
+
+if ! [[ "$gallons" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
+    echo "Invalid input for gallons! Exiting..."
+    exit 1
+fi
+
+# Calculate total cost
+total_cost=$(awk "BEGIN {print $gallons * $gas_price}")
+tax=$(awk "BEGIN {print $total_cost * $SALES_TAX}")
+final_total=$(awk "BEGIN {print $total_cost + $tax}")
+
+echo "Your total is \$$(printf "%.2f" $final_total)"
+
+echo -n "How would you like to pay for it? (Debit Card, Credit Card, Gift Card, or Cash): "
+read payment_method
+
+echo "Great! You have paid the balance of \$$(printf "%.2f" $final_total) using your $payment_method."
+echo "Thank you for filling up gas at Gas 4 Taxes, a place to get broke!"
